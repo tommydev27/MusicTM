@@ -325,6 +325,22 @@ body {
     margin: 0px 0;
 }
 
+#albumCover {
+    transition: transform 0.1s linear; /* Pastikan transisi berjalan halus */
+}
+
+#albumCover.rotating {
+    animation: spin 5s linear infinite; /* Berputar terus dengan kecepatan lebih lambat */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); /* Mulai dari 0 derajat */
+    }
+    100% {
+        transform: rotate(360deg); /* Berputar penuh 360 derajat */
+    }
+}
 
     </style>
 </head>
@@ -345,6 +361,8 @@ body {
     <div class="unique-control" style="font-size: 12px; margin-top: 22px; width: 20px; height: 20px; border: none; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); display: flex; justify-content: center; align-items: center; position: absolute; background: #ac0303; color: #ecfcf2; padding: 0; transform: translateY(-50%); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);" onclick="rewind()">
         <i class="fas fa-guitar"></i>
     </div>
+
+
 
 <!-- Music Menu -->
 <div class="music-menu" id="musicMenu">
@@ -573,5 +591,4 @@ audio.addEventListener("loadedmetadata", () => {
 </body>
 
 
-</body>
 </html>
