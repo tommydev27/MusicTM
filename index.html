@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player UI</title>
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #aebebd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    margin-top: -50px;
+}
+
+.music-menu {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    padding: 15px;
+}
+
+.music-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.music-menu {
+    overflow-y: auto; /* Aktifkan scrolling vertikal */
+    max-height: 300px; /* Batasi tinggi untuk memunculkan scrollbar */
+}
+
+.music-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.music-menu ul li {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f1f1f1;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: #333;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+
+
+.music-menu ul li:hover {
+    background: #d8e6dd;
+    color: #4b6052;
+}
+
+.music-player {
+    width: 280px;
+    height: 482px;
+    padding: 12px;
+    background: #aebebd;
+    border-radius: 30px;
+    box-shadow: 10px 5px 20px #4b6052, -10px -5px 20px #ffffff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 20px;
+    color: #4b6052;
+    margin: 0;
+}
+
+.header .menu-icon {
+    width: 25px;
+    height: 25px;
+    background: #c7d6cc;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 4px #b9c7bd, inset -2px -2px 4px #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-icon {
+    font-size: 12px;
+    padding: 0;
+}
+
+.album-cover {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    border-radius: 100%;
+    overflow: hidden;
+    border: 10px solid #ccc;
+    background-color: #d9dae5;
+    box-shadow: 10px 5px 10px #929e96, -10px -5px 20px #ffffff;
+}
+
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.song-info {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.song-info h2 {
+    font-size: 22px;
+    color: #4b6052;
+    margin: 0;
+}
+
+.fas.fa-check-circle {
+    font-size: 19px;
+    color: #007bff;
+    border-radius: 50%;
+}
+
+.song-info p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #c7d6cc;
+    border-radius: 10px;
+    box-shadow: inset 2px 2px 4px #b9c7bd, inset -2px -2px 4px #ffffff;
+    margin: 10px 0;
+    position: relative;
+}
+
+.progress-bar .progress {
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(145deg, #c5d4ca, #02eb20);
+    border-radius: 10px;
+}
+
+
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.control-btn {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: #aebebd;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px 5px 10px #929e96, -10px -5px 20px #ffffff;
+    font-size: 18px;
+    color: #555;
+    cursor: pointer;
+    /* Menghilangkan efek bawaan ponsel */
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    border: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #4b6052;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.control-btn:hover {
+    background: #d8e6dd;
+}
+
+.bottom-icons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 25px;
+    width: 80%;
+    margin-left: 25px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 30px;
+    background: #aebebd;
+    box-shadow: 0px 1px 5px #656b67, -0px -8px 8px #d8d7d7;
+}
+
+.bottom-icon {
+    position: relative;
+    width: 70px;
+    height: 90px;
+    background: #aebebd;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 1px 3px #69726c, -1px -0px 3px #ffffff;
+    font-size: 28px;
+    color: #4b6052;
+    cursor: pointer;
+}
+
+.bottom-icon::before {
+    content: '';
+    position: absolute;
+    width: 64px;
+    height: 84px;
+    border: 1px solid #4b6052;
+    border-radius: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+.bottom-icon.small {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background: #aebebd;
+    border-radius: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: #f73434c2;
+    cursor: pointer;
+    /* Menghilangkan efek bawaan ponsel */
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+        border: 1px solid #b4abab;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.bottom-icon.small::before {
+    content: '';
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #4b6052;
+    border-radius: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+.unique-controls {
+    position: relative;
+}
+
+#control-btn i {
+    font-size: 25px;
+}
+
+.control-btn:hover {
+    background: #d8e6dd;
+        color: #007bff;
+    transform: scale(0.95);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.bottom-icon:hover {
+    background: #d8e6dd;
+    color: #007bff;
+    transform: scale(0.98);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.bottom-icon:active {
+    background: #bcd4c4;
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    transition: all 0.1s ease-in-out;
+}
+
+/* Gaya untuk waktu */
+.time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #4b6052;
+    margin: 0px 0;
+}
+
+
+    </style>
+</head>
+<body>
+<div class="music-player">
+    <!-- Header -->
+    <div class="header">
+        <h1></h1>
+        <div class="menu-icon" onclick="toggleMusicMenu()">
+            <i class="fas fa-list-ul"></i>
+        </div>
+    </div>
+
+    <!-- Unique Control Buttons -->
+    <div class="unique-control" style="font-size: 25px; margin-top: -5px; width: 45px; height: 45px; border: none; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); display: flex; justify-content: center; align-items: center; position: absolute; background: #017a8d; color: #c7d6cc; padding: 0; transform: translateY(-50%); box-shadow: 1px 0px 50px #333;" onclick="rewind()">
+        <i class="fab fa-digital-ocean"></i>
+    </div>
+    <div class="unique-control" style="font-size: 12px; margin-top: 22px; width: 20px; height: 20px; border: none; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); display: flex; justify-content: center; align-items: center; position: absolute; background: #ac0303; color: #ecfcf2; padding: 0; transform: translateY(-50%); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);" onclick="rewind()">
+        <i class="fas fa-guitar"></i>
+    </div>
+
+<!-- Music Menu -->
+<div class="music-menu" id="musicMenu">
+    <ul>
+        <li onclick="changeMusic('Lagu Favorit', 'Dua Lipa', 'https://drive.google.com/uc?export=download&id=1kO6dzxUvZ0UJPgAJiZ1xDMeqUZ_BBh4_', 'https://iili.io/2CHtVnt.md.jpg')">
+            Lagu Favorit - Dua Lipa
+        </li>
+        <li onclick="changeMusic('rockstar', 'Post Malone, 21 Savage', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Post%20Malone%20-%20rockstar%20ft.%2021%20Savage%20(1).mp3', 'https://iili.io/2CHtVnt.md.jpg')">
+            rockstar - Post Malone, 21 Savage
+        </li>
+        <li onclick="changeMusic('Let You Down', 'NF', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/NF%20-%20Let%20You%20Down.mp3', 'https://iili.io/2CHtVnt.md.jpg')">
+            Let You Down - NF
+        </li>
+        <li onclick="changeMusic('Silence', 'Marshmello, Khalid', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Marshmello%20-%20Silence%20ft.%20Khalid.mp3', 'https://iili.io/2CHtVnt.md.jpg')">
+            Silence - Marshmello, Khalid
+        </li>
+        <li onclick="changeMusic('I Fall Apart', 'Post Malone', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Post%20Malone%20-%20I%20Fall%20Apart.mp3', 'https://iili.io/2CHtVnt.md.jpg')">
+            I Fall Apart - Post Malone
+        </li>
+        <li onclick="changeMusic('Fireproof', 'VAX, Teddy Sky', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/VAX%20-%20Fireproof%20Feat%20Teddy%20Sky.mp3', 'https://iili.io/2CHtVnt.md.jpg')">
+            Fireproof - VAX, Teddy Sky
+        </li>
+        <!-- Added music links -->
+        <li onclick="changeMusic('Perfect', 'Ed Sheeran', 'https://www.dropbox.com/s/3mjzj73400sxovk/perfect.mp3?raw=1', 'https://www.dropbox.com/s/crlthbozdznb13g/perfect.jpeg?raw=1')">
+            Perfect - Ed Sheeran
+        </li>
+        <li onclick="changeMusic('7 Rings', 'Ariana Grande', 'https://www.dropbox.com/s/yo5tcfdjoz95ozf/7-rings.mp3?raw=1', 'https://www.dropbox.com/s/gobvfxj4r0t053v/7-rings.jpg?raw=1')">
+            7 Rings - Ariana Grande
+        </li>
+        <li onclick="changeMusic('Happier', 'Marshmello', 'https://www.dropbox.com/s/zp1xfir101y4sc3/happier.mp3?raw=1', 'https://www.dropbox.com/s/xxmwcz14hkn7iwl/happier.png?raw=1')">
+            Happier - Marshmello
+        </li>
+        <li onclick="changeMusic('Stay', 'Justin Bieber', 'https://www.dropbox.com/s/umam9olakop001d/stay.mp3?raw=1', 'https://www.dropbox.com/s/kierj5lzst1yx9n/stay.jpg?raw=1')">
+            Stay - Justin Bieber
+        </li>
+        <li onclick="changeMusic('Girls Like You', 'Maroon 5', 'https://www.dropbox.com/s/yi1cpg16snrl3fc/girls-like-you.mp3?raw=1', 'https://www.dropbox.com/s/ouq5zzgbqsk9zx0/girls-like-you.png?raw=1')">
+            Girls Like You - Maroon 5
+        </li>
+        <li onclick="changeMusic('Put On Your Sunday', 'Jerry Herman', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/JerryHerman_PutOnYourSundayClothes.mp3', 'https://via.placeholder.com/150')">
+    Put On Your Sunday - Jerry Herman
+</li>
+<li onclick="changeMusic('Can\'t Help Falling In Love', 'Elvis Presley', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/ElvisPresley_CantHelpFallingInLove.mp3', 'https://via.placeholder.com/150')">
+    Can\'t Help Falling In Love - Elvis Presley
+</li>
+<li onclick="changeMusic('Oh, Pretty Woman', 'Roy Orbison', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/RoyOrbison_OhPrettyWoman.mp3', 'https://via.placeholder.com/150')">
+    Oh, Pretty Woman - Roy Orbison
+</li>
+<li onclick="changeMusic('That\'s Life', 'Frank Sinatra', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/FrankSinatra_ThatsLife.mp3', 'https://via.placeholder.com/150')">
+    That\'s Life - Frank Sinatra
+</li>
+<li onclick="changeMusic('Time In A Bottle', 'Jim Croce', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/JimCroce_TimeInABottle.mp3', 'https://via.placeholder.com/150')">
+    Time In A Bottle - Jim Croce
+</li>
+<li onclick="changeMusic('Dark Necessities', 'Red Hot Chili Peppers', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/RedHotChiliPeppers_DarkNecessities.mp3', 'https://via.placeholder.com/150')">
+    Dark Necessities - Red Hot Chili Peppers
+</li>
+<li onclick="changeMusic('La Mer', 'Stephane Grappelli', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/StephaneGrappelli_laMer.mp3', 'https://via.placeholder.com/150')">
+    La Mer - Stephane Grappelli
+</li>
+<li onclick="changeMusic('Overwatch', 'Evan King', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/EvanKing_Overwatch.mp3', 'https://via.placeholder.com/150')">
+    Overwatch - Evan King
+</li>
+<li onclick="changeMusic('SouthSac', 'JR', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/JR_SouthSac.mp3', 'https://via.placeholder.com/150')">
+    SouthSac - JR
+</li>
+<li onclick="changeMusic('Sun', 'The Deli', 'https://rawcdn.githack.com/Kerthin/musicPlayer-templateSait/4df6444e97123a39d036f1f9b57973858f70bae5/docs/music/TheDeli_Sun.mp3', 'https://via.placeholder.com/150')">
+    Sun - The Deli
+</li>
+
+        
+    </ul>
+</div>
+
+
+    <!-- Album Cover -->
+<!-- Sampul Album -->
+<div class="album-cover">
+    <img id="albumCover" src="https://iili.io/2CHtVnt.md.jpg" alt="Album Cover">
+</div>
+
+
+    <div class="unique-controls">
+        <!-- Song Info -->
+        <div class="song-info">
+            <h2 id="song-title">Tommy Website <i class="fas fa-check-circle"></i></h2>
+            <p id="song-artist">Shawn Mendes</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <div class="time">
+            <span id="current-time">00:00</span>
+            <span id="total-time">03:45</span>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-btn" onclick="rewind()"><i class="fas fa-fast-backward"></i></div>
+            <div class="control-btn" onclick="togglePlayPause()" style="font-size:30px;">
+                <i class="fas fa-play-circle" id="playPauseIcon"></i>
+            </div>
+            <div class="control-btn" onclick="fastForward()"><i class="fas fa-fast-forward"></i></div>
+        </div>
+    </div>
+
+    <!-- Bottom Icons -->
+    <div class="bottom-icons">
+        <div class="bottom-icon" style="font-size: 50px;">
+            <i class="fab fa-itunes-note"></i>
+        </div>
+        <div class="bottom-icon small" style="font-size: 30px;">
+            <i class="fab fa-instagram-square"></i>
+        </div>
+        <div class="bottom-icon small" style="font-size: 30px; color: #007bff;">
+            <i class="fab fa-facebook-square"></i>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/308622/Post%20Malone%20-%20rockstar%20ft.%2021%20Savage%20(1).mp3" preload="auto"></audio>
+</div>
+<script>
+// Toggle menu musik
+function toggleMusicMenu() {
+    const menu = document.getElementById("musicMenu");
+    menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
+}
+
+// Ubah lagu
+function changeMusic(title, artist, source, albumCoverUrl) {
+    const audio = document.getElementById("audioPlayer");
+    const songTitle = document.getElementById("song-title");
+    const songArtist = document.getElementById("song-artist");
+    const albumCover = document.getElementById("albumCover");
+
+    // Ganti sumber audio
+    audio.src = source;
+
+    // Ganti judul lagu dan artis
+    songTitle.innerHTML = title;
+    songArtist.innerHTML = artist;
+
+    // Ganti gambar album
+    albumCover.src = albumCoverUrl;
+
+    // Putar lagu
+    audio.play();
+    updatePlayPauseIcon(true);
+}
+
+// Play/Pause musik
+function togglePlayPause() {
+    const audio = document.getElementById("audioPlayer");
+    const albumCover = document.getElementById("albumCover");
+
+    if (audio.paused) {
+        audio.play();
+        albumCover.classList.add("rotating"); // Tambahkan animasi rotasi
+        updatePlayPauseIcon(true);
+    } else {
+        audio.pause();
+        albumCover.classList.remove("rotating"); // Hentikan animasi rotasi
+        updatePlayPauseIcon(false);
+    }
+}
+
+// Perbarui ikon Play/Pause
+function updatePlayPauseIcon(isPlaying) {
+    const playPauseIcon = document.getElementById("playPauseIcon");
+    playPauseIcon.className = isPlaying ? "fas fa-pause-circle" : "fas fa-play-circle";
+}
+
+// Rewind musik
+function rewind() {
+    const audio = document.getElementById("audioPlayer");
+    audio.currentTime -= 5; // Mundur 5 detik
+}
+
+// Fast forward musik
+function fastForward() {
+    const audio = document.getElementById("audioPlayer");
+    audio.currentTime += 5; // Maju 5 detik
+}
+
+// Update progress bar dan waktu
+function updateProgressBar() {
+    const audio = document.getElementById("audioPlayer");
+    const progressBar = document.querySelector(".progress");
+    const currentTime = document.getElementById("current-time");
+    const totalTime = document.getElementById("total-time");
+
+    if (audio.duration) {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${progress}%`;
+
+        currentTime.innerText = formatTime(audio.currentTime);
+        totalTime.innerText = formatTime(audio.duration);
+    }
+}
+
+// Format waktu (mm:ss)
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+// Tangani agar musik terus berjalan di latar belakang
+document.addEventListener("visibilitychange", () => {
+    const audio = document.getElementById("audioPlayer");
+    if (document.visibilityState === "hidden" && !audio.paused) {
+        console.log("Halaman tidak aktif, musik tetap berjalan.");
+    }
+});
+
+// Event listener untuk audio
+const audio = document.getElementById("audioPlayer");
+audio.addEventListener("timeupdate", updateProgressBar); // Update progress bar saat lagu berjalan
+audio.addEventListener("loadedmetadata", () => {
+    document.getElementById("total-time").innerText = formatTime(audio.duration);
+});
+</script>
+</body>
+
+
+</body>
+</html>
